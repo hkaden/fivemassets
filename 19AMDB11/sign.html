@@ -1,0 +1,136 @@
+
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv='X-UA-Compatible' content="IE=edge">
+		<meta name='viewport' content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=uXDcgjTw41QAugrnFzsdkCda00dz-ItZ7B9llIDghJnZhypxj5_YVHqaaek2R29Lmui_CwTBH_1iPe78bkT184YzQ8p44Xl1jDvRL2jMY4vP-nb407fxD3FQA2UdXv_E" charset="UTF-8"></script><style>
+		body {
+			background: #FFFFFF;
+			-webkit-animation: colorchange 4s linear 2s infinite alternate;
+		}
+		@-webkit-keyframes colorchange {
+			0% {
+				background: #FFF;
+			}
+			20% {
+				background: #F5624D;
+			}
+			40% {
+				background: #CC231E;
+			}
+						60% {
+				background: #34A65F;
+			}
+						80% {
+				background: #0F8A5F;
+			}
+									100% {
+				background: #235E6F;
+			}
+
+		}
+		/* filter: invert(52%) sepia(93%) saturate(787%) hue-rotate(176deg) brightness(97%) contrast(86%); */
+		</style>
+	</head>
+	<body>
+		
+	</body>
+	<script>
+	(function () {
+
+  var COUNT = 300;
+  var masthead = document.querySelector('body');
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+  var width = masthead.clientWidth;
+  var height = masthead.clientHeight;
+  var i = 0;
+  var active = false;
+
+  function onResize() {
+    width = masthead.clientWidth;
+    height = masthead.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.fillStyle = '#FFF';
+
+    var wasActive = active;
+    active = width > 600;
+
+    if (!wasActive && active)
+      requestAnimFrame(update);
+  }
+
+  var Snowflake = function () {
+    this.x = 0;
+    this.y = 0;
+    this.vy = 0;
+    this.vx = 0;
+    this.r = 0;
+
+    this.reset();
+  }
+
+  Snowflake.prototype.reset = function() {
+    this.x = Math.random() * width;
+    this.y = Math.random() * -height;
+    this.vy = 1 + Math.random() * 3;
+    this.vx = 0.5 - Math.random();
+    this.r = 1 + Math.random() * 2;
+    this.o = 0.5 + Math.random() * 0.5;
+  }
+
+  canvas.style.position = 'absolute';
+  canvas.style.left = canvas.style.top = '0';
+
+  var snowflakes = [], snowflake;
+  for (i = 0; i < COUNT; i++) {
+    snowflake = new Snowflake();
+    snowflake.reset();
+    snowflakes.push(snowflake);
+  }
+
+  function update() {
+
+    ctx.clearRect(0, 0, width, height);
+
+    if (!active)
+      return;
+
+    for (i = 0; i < COUNT; i++) {
+      snowflake = snowflakes[i];
+      snowflake.y += snowflake.vy;
+      snowflake.x += snowflake.vx;
+
+      ctx.globalAlpha = snowflake.o;
+      ctx.beginPath();
+      ctx.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
+      ctx.closePath();
+      ctx.fill();
+
+      if (snowflake.y > height) {
+        snowflake.reset();
+      }
+    }
+
+    requestAnimFrame(update);
+  }
+
+  // shim layer with setTimeout fallback
+  window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function( callback ){
+              window.setTimeout(callback, 1000 / 60);
+            };
+  })();
+
+  onResize();
+  window.addEventListener('resize', onResize, false);
+
+  masthead.appendChild(canvas);
+})();
+	</script>
+</html>
